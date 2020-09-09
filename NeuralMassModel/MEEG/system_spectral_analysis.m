@@ -10,44 +10,6 @@ Nt0       = 1000;
 tspan     = tspan(Nt0:end);
 Act       = squeeze(Z(1,:,:));
 Act       = Act(:,Nt0:end);
-%%
-TFR     = morletcwt(transpose(Act), 3:0.5:20, 1/h, 9);
-[PSD,F] = pmtm(Act',10,200,1./h);
-
-Y     = permute(Y,[2 1 3]);
-Y11 = Y(Index_pop{1},1,1); Y12 = Y(Index_pop{2},1,1); Y13 = Y(Index_pop{3},1,1); Y14 = Y(Index_pop{4},1,1); Y15 = Y(Index_pop{5},1,1);
-Y21 = Y(Index_pop{1},2,1); Y22 = Y(Index_pop{2},2,1); Y23 = Y(Index_pop{3},2,1); Y24 = Y(Index_pop{4},2,1); Y25 = Y(Index_pop{5},2,1);
-Y31 = Y(Index_pop{1},3,1); Y32 = Y(Index_pop{2},3,1); Y33 = Y(Index_pop{3},3,1); Y34 = Y(Index_pop{4},3,1); Y35 = Y(Index_pop{5},3,1);
-
-figure;
-set(gcf,'Position',[0 3000 50 100]);
-subplot(2,5,1)
-plot(tspan,squeeze(Act(Index_pop{1},:)))
-title('gamma time-frequency')
-xlim([min(tspan) max(tspan)]);
-xlabel('time'); ylabel('activation');
-
-subplot(2,5,2)
-TFRpop = log(1 + transpose(abs(squeeze(mean(TFR(Index_pop{1},:,:),3)))));
-imagesc(tspan, 3:0.5:20, TFRpop); 
-xlabel('time'); ylabel('wavelet psd');
-axis xy
-
-subplot(2,5,3)
-PSDpop  = mean(PSD(:,Index_pop{1}),2);
-semilogy(F,PSDpop);xlim([0 50]);
-title('gamma thomson psd')
-
-subplot(1,5,1)
-g1  = scatter3(Y11,Y21,Y31,'Or');
-title('gamma dynamics')
-
-
-
-
-
-
-
 
 %% Wavelet morlet
 TFR       = morletcwt(transpose(Act), 3:0.5:20, 1/h, 9);

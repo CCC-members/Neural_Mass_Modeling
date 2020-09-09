@@ -8,17 +8,23 @@ Act    = Act(:,1000:end);
 %% Ploting EEG signal
 fig1 = figure;
 subplot(211)
+% if length(size(Z))==2
 plot(tspan1,Act)
 xlabel('time(s)')
 ylabel('activation')
 title('EEG simulation')
+% else
+%     plot(tspan1,mean(Act))
+%     xlabel('time(s)')
+%     ylabel('activation')
+%     title('EEG simulation')
 subplot(212)
 TFR = morletcwt(transpose(Act), 3:0.5:20, 1/h, 9);
 TFR = log(1 + transpose(abs(squeeze(mean(TFR,3)))));
 imagesc(tspan1, 3:0.5:20, TFR); axis xy
-xlabel('time(s)')
-ylabel('Wavelets coefficients')
-title('Wavelet Spectrum')
+xlabel('time (s)')
+ylabel('frequency (Hz)')
+title('Time-frequency Map')
 %% Ploting the NMM
 fig2 = figure;
 if length(size(Z))==2
@@ -26,7 +32,7 @@ if length(size(Z))==2
     xlabel('Pyramidal cell')
     ylabel('Inhibitory cell')
     zlabel('Stellate cell')
-    title('Unit oscillatory Behavior')
+    %title('Unit oscillatory Behavior')
 else
     Y     = permute(Y,[2 1 3]);
     Y1    = Y(:,1,1);
@@ -43,7 +49,7 @@ else
         xlabel('Pyramidal cell')
         ylabel('Inhibitory cell')
         zlabel('Stellate cell')
-        title('Population dynamics')
+       % title('Population dynamics')
     end
 end
 %% PSD estimation
@@ -55,6 +61,19 @@ semilogy(F,PSD);xlim([0 50]);
 xlabel('frequency (Hz)')
 ylabel('psd coefficients')
 title('Power Spectral Density')
+% %% NMM with Nm=20
+% if length(size(Z))==3
+% fig4 = figure;
+% Y120=Y(1,20,:);Y220=Y(2,20,:);Y320=Y(3,20,:);
+% Y120= reshape(Y120,[1 2400]); 
+% Y220= reshape(Y220,[1 2400]); 
+% Y320= reshape(Y320,[1 2400]);  
+% plot3(Y120,Y220,Y320);   
+% xlabel('Pyramidal cell')
+% ylabel('Inhibitory cell')
+% zlabel('Stellate cell')
+% title('Population dynamics')
+% end
 %%
 figures = [...
     ...

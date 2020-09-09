@@ -11,7 +11,7 @@ function [param] = population_network_param(param)
 sigma_dwSte4        = param.spectral_response.stochastic_inputs.sigma_dwSte4;
 tau_unit            = param.spectral_response.tau_unit;
 %% Defining population parameters
-Nunit               = 30;
+Nunit               = 10000;
 Ipop                = eye(Nunit);
 nu_pop              = 10; % population frequency (Hz) 
 taumin              = 3*max(tau_unit);
@@ -37,7 +37,7 @@ K0                  = Ipop - U';
 % K(nu_pop) = FT[abs(K).*delta(t-delays_pop)]
 tau0                = (-angle(K0) + pi)/(2*pi*nu_pop) + taumin;
 tau0                = tau0 - diag(diag(tau0));
-sigma0              = tau0/3;
+sigma0              = tau0/3 + eye(length(tau0));
 taumax              = 1.5*max(tau0(:));
 K0                  = real(K0) - diag(diag(real(K0)));
 %% Saving parameters

@@ -1,4 +1,4 @@
-function[X,Y,Z,param] = LL_system_integration(param)
+function[Y,X,Z,param] = LL_system_integration(param)
 %% Obtains time series by LL integration of the neural mass model for a population
 %% Inputs
 % param - parameters from "jansen_and_rit_param", % "physical_time_constants", "unit_response_param", % "population_connectivity_tensor"
@@ -12,14 +12,24 @@ Nt            = param.physical_time.Nt;
 Nunit         = param.system_network.Nunit;
 Index_pop     = param.system_network.Index_pop;
 Npop          = param.system_network.Npop;
-Ntau          = param.system_network.connectivity_tensor.Ntau;
 C             = param.jansen_and_rit.coupling.C;
-K             = param.system_network.connectivity_tensor.K;
+K0            = param.system_network.K0;
+taumax        = param.system_network.taumax;
+tau0          = param.system_network.tau0;
+sigma0        = param.system_network.sigma0;
+h             = param.physical_time.h;
 v0            = param.jansen_and_rit.sigmoid.v0;
 r             = param.jansen_and_rit.sigmoid.r;
 e0            = param.jansen_and_rit.sigmoid.e0;
 Asys          = param.system_network.jacobian_expm.A;
 Bsys          = param.system_network.jacobian_expm.B;
+%% Lag distribution
+tau           = (0:1:(floor(taumax/h)-1))*h;
+Ntau          = length(tau);
+if h > sigma0/10
+    disp(' h>delta0/100, set a smaller step for integration')
+    return;
+end
 %% Initialization 
 miu_dw_unit   = param.system_network.spectral_response.stochastic_inputs.miu_dw;
 sigma_dw_unit = param.system_network.spectral_response.stochastic_inputs.sigma_dw;
@@ -50,6 +60,12 @@ for time = (Ntau+1):Nt
         A      = Asys(:,:,pop);
         B      = Bsys(:,:,pop);
         for unit = Index_pop{pop}'
+            tau2D      = repmat(tau,sum(Nunit),1);
+            tau02D     = repmat(tau0(unit,:)',1,Ntau);
+            sigma02D   = repmat(sigma0(unit,:)',1,Ntau);
+            D          = exp(-((tau2D-tau02D)./sigma02D).^2);
+            K          = repmat(K0(unit,:)',1,Ntau);
+            K          = K.*D;
             z(:,unit)  = LL_unit_z_outputs(Ytau,C,K,unit);
             z_dif      = z(:,unit) - Ztau1(:,unit);
             %% dw-update

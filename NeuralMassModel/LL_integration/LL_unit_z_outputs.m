@@ -10,7 +10,6 @@ if nargin < 3
     z  = C*Y;
   else
     z    = C*Y(:,unit,end);
-    K    = squeeze(K(unit,:,:));
     z(3) = z(3) + sum(sum(K.*squeeze(Y(1,:,:))));
 end
 end
