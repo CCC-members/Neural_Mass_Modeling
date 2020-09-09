@@ -12,7 +12,7 @@ sigma_dwSte4        = param.system_network.spectral_response.stochastic_inputs.s
 tau_sys             = param.system_network.spectral_response.tau_sys;
 Npop                = param.system_network.Npop;
 %% Defining population parameters
-Nunit               = [30 30 30 30 30];
+Nunit               = [10000 10000 10000 10000 10000];
 Index_pop           = {[1:Nunit(1)]'...
     [(Nunit(1)+1):(Nunit(1)+Nunit(2))]'...
     [(Nunit(1)+Nunit(2)+1):(Nunit(1)+Nunit(2)+Nunit(3))]'...
@@ -57,7 +57,7 @@ for pop1 = 1:Npop
     end
 end
 tau0                = tau0 - diag(diag(tau0));
-sigma0              = tau0/3;
+sigma0              = tau0/3 + eye(length(tau0));
 taumax              = 1.5*max(tau0(:));
 K0                  = real(K0) - diag(diag(real(K0)));
 %% Saving parameters

@@ -1,4 +1,4 @@
-function[X,Y,Z,param] = LL_unit_integration(param)
+function[Y,X,Z,param] = LL_unit_integration(param)
 %% Obtains time series by LL integration of the neural mass model for a single unit
 %% Inputs
 % param - parameters from "jansen_and_rit_param", "physical_time_constants" and "spectral_process_param"

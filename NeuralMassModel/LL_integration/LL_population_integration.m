@@ -1,4 +1,4 @@
-function[X,Y,Z,param] = LL_population_integration(param)
+function[Y,X,Z,param] = LL_population_integration(param)
 %% Obtains time series by LL integration of the neural mass model for a population
 %% Inputs
 % param - parameters from "jansen_and_rit_param", % "physical_time_constants", "unit_response_param", % "population_connectivity_tensor"
